@@ -61,6 +61,7 @@ const NerdioTimelineCalculator = () => {
     lastMod: "Recent modernization means less technical debt and faster migration"
   };
 
+  // Complete scoring weights matrix
   const weights = {
     users: [2, 2, 3],
     useCases: [4, 4, 4],
@@ -74,7 +75,7 @@ const NerdioTimelineCalculator = () => {
     changeControl: [1, 2, 3],
     security: [1, 2, 3],
     apps: [2, 2, 3],
-    modernization: [2, 2, 10],
+    modernization: [2, 2, 10], // THE BIG ONE
     backend: [0, 1, 3],
     peripherals: [0, 2, 3],
     cloudTesting: [1, 2, 3],
@@ -138,6 +139,7 @@ const NerdioTimelineCalculator = () => {
 
     const delta = weeksAvailable - weeksRequired;
     
+    // Define phases
     const phases = [
       { name: 'Prepare & Transform Applications', weeks: Math.min(9, Math.ceil(weeksRequired * 0.3)) },
       { name: 'Prepare Azure Environment', weeks: 3 },
@@ -238,6 +240,7 @@ const NerdioTimelineCalculator = () => {
       });
     }
 
+    // Complexity-based recommendations
     if (totalScore > 80) {
       recs.push({
         type: 'warning',
@@ -329,6 +332,7 @@ const NerdioTimelineCalculator = () => {
 
     const { weeksAvailable, weeksRequired, phases } = results;
     
+    // Calculate when each phase should occur (working backwards)
     let currentWeekFromEnd = weeksRequired;
     const phaseTimings = phases.map(phase => {
       const endWeek = currentWeekFromEnd;
@@ -343,25 +347,28 @@ const NerdioTimelineCalculator = () => {
       };
     }).reverse();
 
+    // Phase colors (solid for this design)
     const phaseColors = [
-      'bg-blue-500',
+      'bg-nerdio-primary-500',
       'bg-indigo-500', 
-      'bg-purple-500',
+      'bg-nerdio-secondary-500',
       'bg-pink-500',
       'bg-rose-500',
       'bg-orange-500'
     ];
 
+    // Calculate key milestones
     const milestones = [
       { name: 'Go/No-Go Decision', week: Math.floor(weeksRequired * 0.3), color: 'bg-yellow-400' },
-      { name: 'Pilot Launch', week: Math.floor(weeksRequired * 0.7), color: 'bg-blue-500' },
+      { name: 'Pilot Launch', week: Math.floor(weeksRequired * 0.7), color: 'bg-nerdio-primary-500' },
       { name: 'Production Cutover', week: weeksRequired, color: 'bg-green-500' }
     ];
 
     return (
       <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
+        {/* Header */}
         <div className="mb-6">
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Project Timeline</h3>
+          <h3 className="text-xl font-bold text-nerdio-dark mb-2">Project Timeline</h3>
           <div className="flex items-center gap-6 text-sm text-gray-600">
             <div className="flex items-center gap-2">
               <Calendar size={16} />
@@ -376,6 +383,7 @@ const NerdioTimelineCalculator = () => {
           </div>
         </div>
 
+        {/* Column Headers */}
         <div className="grid grid-cols-12 gap-4 mb-4 px-6 text-sm font-semibold text-gray-500">
           <div className="col-span-3">Phase</div>
           <div className="col-span-6">Timeline</div>
@@ -383,6 +391,7 @@ const NerdioTimelineCalculator = () => {
           <div className="col-span-1 text-center">Status</div>
         </div>
 
+        {/* Phase Rows */}
         <div className="space-y-3">
           {phaseTimings.map((phase, idx) => {
             const isOverflow = phase.endWeek > weeksAvailable;
@@ -392,11 +401,13 @@ const NerdioTimelineCalculator = () => {
                 key={idx}
                 className="grid grid-cols-12 gap-4 items-center bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
               >
+                {/* Phase Name & Duration */}
                 <div className="col-span-3">
-                  <div className="font-semibold text-gray-800 text-sm">{phase.name}</div>
+                  <div className="font-semibold text-nerdio-dark text-sm">{phase.name}</div>
                   <div className="text-xs text-gray-500 mt-1">{phase.weeks} weeks</div>
                 </div>
 
+                {/* Timeline Bar */}
                 <div className="col-span-6 relative h-8 bg-gray-200 rounded-full overflow-hidden">
                   <div 
                     className={`absolute h-full ${isOverflow ? 'bg-red-500' : phaseColors[idx]} rounded-full transition-all`}
@@ -405,6 +416,7 @@ const NerdioTimelineCalculator = () => {
                       width: `${phase.widthPercent}%`
                     }}
                   ></div>
+                  {/* Timeline scale markers */}
                   <div className="absolute inset-0 flex items-center">
                     {[0, 25, 50, 75, 100].map(mark => (
                       <div 
@@ -416,10 +428,12 @@ const NerdioTimelineCalculator = () => {
                   </div>
                 </div>
 
+                {/* Progress */}
                 <div className="col-span-2 text-center">
-                  <span className="text-lg font-semibold text-gray-800">0%</span>
+                  <span className="text-lg font-semibold text-nerdio-dark">0%</span>
                 </div>
 
+                {/* Status Icon */}
                 <div className="col-span-1 flex justify-center">
                   {isOverflow ? (
                     <AlertTriangle className="text-red-500" size={20} />
@@ -432,12 +446,13 @@ const NerdioTimelineCalculator = () => {
           })}
         </div>
 
+        {/* Key Milestones */}
         <div className="mt-8 pt-6 border-t border-gray-200">
           <div className="flex items-center gap-2 mb-4">
             <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center">
               <span className="text-white text-xs">⚑</span>
             </div>
-            <h4 className="font-semibold text-gray-800">Key Milestones</h4>
+            <h4 className="font-semibold text-nerdio-dark">Key Milestones</h4>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -445,7 +460,7 @@ const NerdioTimelineCalculator = () => {
               <div key={idx} className="flex items-center gap-3">
                 <div className={`w-3 h-3 rounded-full ${milestone.color}`}></div>
                 <div>
-                  <div className="text-sm font-medium text-gray-800">{milestone.name}</div>
+                  <div className="text-sm font-medium text-nerdio-dark">{milestone.name}</div>
                   <div className="text-xs text-gray-500">Week {milestone.week}</div>
                 </div>
               </div>
@@ -453,6 +468,7 @@ const NerdioTimelineCalculator = () => {
           </div>
         </div>
 
+        {/* Timeline scale */}
         <div className="mt-6 px-6">
           <div className="relative h-8 flex items-center justify-between text-xs text-gray-500">
             <span>Start</span>
@@ -467,11 +483,11 @@ const NerdioTimelineCalculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-nerdio-primary-50 via-white to-nerdio-primary-50 p-4">
       <div className="max-w-7xl mx-auto">
         <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-3">
-            <Calendar className="text-indigo-600" size={32} />
+          <h1 className="text-3xl font-bold text-nerdio-dark flex items-center gap-3">
+            <Calendar className="text-nerdio-primary-500" size={32} />
             Nerdio Go-Live Timeline Calculator
           </h1>
           <p className="text-gray-600 mt-2">
@@ -481,9 +497,10 @@ const NerdioTimelineCalculator = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <div className="lg:col-span-3 space-y-6">
+            {/* Dates Section */}
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                <Calendar className="text-indigo-600" />
+              <h2 className="text-xl font-bold text-nerdio-dark mb-4 flex items-center gap-2">
+                <Calendar className="text-nerdio-primary-500" />
                 Timeline Constraints
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -512,13 +529,303 @@ const NerdioTimelineCalculator = () => {
               </div>
             </div>
 
-            {/* Rest of form sections would continue here - truncated for length */}
-            {/* The complete component is ~1500 lines - I've included the critical parts */}
+            {/* Project Scope */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-nerdio-dark mb-4 flex items-center gap-2">
+                <Users className="text-nerdio-primary-500" />
+                Project Scope
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Number of Users
+                    <Tooltip id="users" content={tooltips.users} />
+                  </label>
+                  <select
+                    value={formData.users}
+                    onChange={(e) => setFormData({...formData, users: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">Less than 1,000</option>
+                    <option value="2">1,000 - 5,000</option>
+                    <option value="3">More than 5,000</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Use Cases
+                    <Tooltip id="useCases" content={tooltips.useCases} />
+                  </label>
+                  <select
+                    value={formData.useCases}
+                    onChange={(e) => setFormData({...formData, useCases: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">3-5 use cases</option>
+                    <option value="2">5-10 use cases</option>
+                    <option value="3">10+ use cases</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Current Technology Stack */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-nerdio-dark mb-4 flex items-center gap-2">
+                <Server className="text-nerdio-primary-500" />
+                Current Technology Stack
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    On-Prem to Cloud Migration
+                    <Tooltip id="onPremToCloud" content={tooltips.onPremToCloud} />
+                  </label>
+                  <select
+                    value={formData.onPremToCloud}
+                    onChange={(e) => setFormData({...formData, onPremToCloud: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">No</option>
+                    <option value="2">Partial</option>
+                    <option value="3">Yes - Full Migration</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Citrix/VMware Cloud
+                    <Tooltip id="citrix" content={tooltips.citrix} />
+                  </label>
+                  <select
+                    value={formData.citrixCloud}
+                    onChange={(e) => setFormData({...formData, citrixCloud: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">No</option>
+                    <option value="2">Partial</option>
+                    <option value="3">Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Citrix/VMware Hybrid
+                  </label>
+                  <select
+                    value={formData.citrixHybrid}
+                    onChange={(e) => setFormData({...formData, citrixHybrid: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">No</option>
+                    <option value="2">Partial</option>
+                    <option value="3">Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Citrix/VMware On-Prem
+                  </label>
+                  <select
+                    value={formData.citrixOnPrem}
+                    onChange={(e) => setFormData({...formData, citrixOnPrem: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">No</option>
+                    <option value="2">Partial</option>
+                    <option value="3">Yes</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Cloud Platform
+                    <Tooltip id="cloud" content={tooltips.cloud} />
+                  </label>
+                  <select
+                    value={formData.cloud}
+                    onChange={(e) => setFormData({...formData, cloud: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="2">Azure (Score: 2)</option>
+                    <option value="2">No strategy defined (Score: 2)</option>
+                    <option value="3">GCP/AWS (Score: 3)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Azure Landing Zone
+                    <Tooltip id="landingZone" content={tooltips.landingZone} />
+                  </label>
+                  <select
+                    value={formData.landingZone}
+                    onChange={(e) => setFormData({...formData, landingZone: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="2">Yes - Exists (Score: 2)</option>
+                    <option value="2">Partial - New Needed (Score: 2)</option>
+                    <option value="3">No - New to Azure (Score: 3)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Operating Systems
+                    <Tooltip id="os" content={tooltips.os} />
+                  </label>
+                  <select
+                    value={formData.os}
+                    onChange={(e) => setFormData({...formData, os: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">Windows 11 / Server 2019+</option>
+                    <option value="2">Windows 10 / Server 2016</option>
+                    <option value="3">Windows 7/8 / Server 2012</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Governance & Security */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-nerdio-dark mb-4 flex items-center gap-2">
+                <Shield className="text-nerdio-primary-500" />
+                Governance & Security
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Change Control Process
+                    <Tooltip id="changeControl" content={tooltips.changeControl} />
+                  </label>
+                  <select
+                    value={formData.changeControl}
+                    onChange={(e) => setFormData({...formData, changeControl: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">Less than 1 week</option>
+                    <option value="2">1-2 weeks</option>
+                    <option value="3">Monthly process</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Security Review Process
+                    <Tooltip id="security" content={tooltips.security} />
+                  </label>
+                  <select
+                    value={formData.security}
+                    onChange={(e) => setFormData({...formData, security: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">Accept defaults</option>
+                    <option value="2">Short review process</option>
+                    <option value="3">Challenging/Lengthy review</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* Applications */}
+            <div className="bg-white rounded-xl shadow-lg p-6">
+              <h2 className="text-xl font-bold text-nerdio-dark mb-4 flex items-center gap-2">
+                <Package className="text-nerdio-primary-500" />
+                Application Discovery
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Number of Applications
+                    <Tooltip id="apps" content={tooltips.apps} />
+                  </label>
+                  <select
+                    value={formData.apps}
+                    onChange={(e) => setFormData({...formData, apps: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">Less than 100</option>
+                    <option value="2">100-300</option>
+                    <option value="3">More than 300</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    App Modernization Required?
+                    <Tooltip id="modernization" content={tooltips.modernization} />
+                  </label>
+                  <select
+                    value={formData.modernization}
+                    onChange={(e) => setFormData({...formData, modernization: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">No - Already modern</option>
+                    <option value="2">Some repackaging needed</option>
+                    <option value="3">Yes - Full modernization (Weight: 10!)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Backend System Connections
+                    <Tooltip id="backend" content={tooltips.backend} />
+                  </label>
+                  <select
+                    value={formData.backend}
+                    onChange={(e) => setFormData({...formData, backend: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">No</option>
+                    <option value="2">Few / Low priority</option>
+                    <option value="3">Core LOB / Latency sensitive</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Peripheral Device Requirements
+                    <Tooltip id="peripherals" content={tooltips.peripherals} />
+                  </label>
+                  <select
+                    value={formData.peripherals}
+                    onChange={(e) => setFormData({...formData, peripherals: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">No</option>
+                    <option value="2">Yes - RemoteFX capable</option>
+                    <option value="3">RemoteFX + 3rd party drivers</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Cloud Testing Status
+                    <Tooltip id="cloudTesting" content={tooltips.cloudTesting} />
+                  </label>
+                  <select
+                    value={formData.cloudTesting}
+                    onChange={(e) => setFormData({...formData, cloudTesting: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">Yes - Works well</option>
+                    <option value="2">Yes - Some challenges</option>
+                    <option value="3">Not tested</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Last Application Modernization
+                    <Tooltip id="lastMod" content={tooltips.lastMod} />
+                  </label>
+                  <select
+                    value={formData.lastMod}
+                    onChange={(e) => setFormData({...formData, lastMod: e.target.value})}
+                    className="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-indigo-500 focus:outline-none"
+                  >
+                    <option value="1">Recently (modern)</option>
+                    <option value="2">1-2 years ago</option>
+                    <option value="3">2+ years ago</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
             <div className="flex gap-3">
               <button
                 onClick={calculateTimeline}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
+                className="flex-1 bg-nerdio-primary-500 hover:bg-nerdio-primary-600 text-white font-bold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 <Calendar size={20} />
                 Build Timeline
@@ -533,9 +840,10 @@ const NerdioTimelineCalculator = () => {
             </div>
           </div>
 
+          {/* Sidebar */}
           <div className="space-y-6">
             <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-bold text-gray-800 mb-4">How It Works</h2>
+              <h2 className="text-xl font-bold text-nerdio-dark mb-4">How It Works</h2>
               <div className="space-y-3 text-sm text-gray-700">
                 <p className="flex items-start gap-2">
                   <CheckCircle size={16} className="text-green-500 mt-1 flex-shrink-0" />
@@ -549,12 +857,27 @@ const NerdioTimelineCalculator = () => {
                   <AlertTriangle size={16} className="text-red-500 mt-1 flex-shrink-0" />
                   App modernization has 10x weight
                 </p>
+                <p className="flex items-start gap-2">
+                  <CheckCircle size={16} className="text-green-500 mt-1 flex-shrink-0" />
+                  Converts score to weeks
+                </p>
+                <p className="flex items-start gap-2">
+                  <CheckCircle size={16} className="text-green-500 mt-1 flex-shrink-0" />
+                  Works backwards from go-live
+                </p>
+              </div>
+
+              <div className="mt-6 p-4 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                <p className="text-sm font-semibold text-yellow-800">Critical Insight</p>
+                <p className="text-sm text-yellow-700 mt-1">
+                  Application modernization (weight: 10) can add 30+ points alone - often the difference between feasible and impossible!
+                </p>
               </div>
             </div>
 
             {savedScenarios.length > 0 && (
               <div className="bg-white rounded-xl shadow-lg p-6">
-                <h3 className="font-semibold text-gray-800 mb-3">Saved Scenarios</h3>
+                <h3 className="font-semibold text-nerdio-dark mb-3">Saved Scenarios</h3>
                 <div className="space-y-2">
                   {savedScenarios.map(scenario => (
                     <button
@@ -572,27 +895,29 @@ const NerdioTimelineCalculator = () => {
           </div>
         </div>
 
+        {/* Results Section */}
         {results && (
           <div className="mt-6 space-y-6">
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Timeline Analysis Results</h2>
+                <h2 className="text-2xl font-bold text-nerdio-dark">Timeline Analysis Results</h2>
                 <button
                   onClick={saveScenario}
-                  className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center gap-2 bg-nerdio-primary-500 hover:bg-nerdio-primary-600 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                   <Save size={18} />
                   Save Scenario
                 </button>
               </div>
 
+              {/* Summary Cards */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-6 text-center">
-                  <div className="text-4xl font-bold text-blue-900">{results.weeksRequired}</div>
+                <div className="bg-nerdio-primary-50 border-2 border-nerdio-primary-200 rounded-lg p-6 text-center">
+                  <div className="text-4xl font-bold text-nerdio-dark">{results.weeksRequired}</div>
                   <div className="text-blue-700 mt-2">Weeks Required</div>
                 </div>
-                <div className="bg-purple-50 border-2 border-purple-200 rounded-lg p-6 text-center">
-                  <div className="text-4xl font-bold text-purple-900">{results.weeksAvailable}</div>
+                <div className="bg-nerdio-secondary-50 border-2 border-nerdio-secondary-200 rounded-lg p-6 text-center">
+                  <div className="text-4xl font-bold text-nerdio-dark">{results.weeksAvailable}</div>
                   <div className="text-purple-700 mt-2">Weeks Available</div>
                 </div>
                 <div className={`border-2 rounded-lg p-6 text-center ${
@@ -617,6 +942,7 @@ const NerdioTimelineCalculator = () => {
                 </div>
               </div>
 
+              {/* Validity Message */}
               <div className={`border-2 rounded-lg p-6 mb-6 ${getValidityColor(results.delta)}`}>
                 <div className="text-xl font-bold flex items-center">
                   {getValidityIcon(results.delta)}
@@ -631,7 +957,86 @@ const NerdioTimelineCalculator = () => {
                 </p>
               </div>
 
+              {/* Gantt Timeline */}
               {renderGanttTimeline()}
+
+              {/* Recommendations */}
+              <div className="mt-6">
+                <h3 className="text-lg font-bold text-nerdio-dark mb-3">Strategic Recommendations</h3>
+                <div className="space-y-2">
+                  {results.recommendations.map((rec, idx) => (
+                    <div
+                      key={idx}
+                      className={`p-4 rounded-lg border-l-4 ${
+                        rec.type === 'critical' ? 'bg-red-50 border-red-500' :
+                        rec.type === 'warning' ? 'bg-yellow-50 border-yellow-500' :
+                        rec.type === 'success' ? 'bg-green-50 border-green-500' :
+                        'bg-nerdio-primary-50 border-blue-500'
+                      }`}
+                    >
+                      <p className="text-sm font-medium">{rec.text}</p>
+                      {rec.impact && (
+                        <span className={`inline-block mt-2 px-2 py-1 text-xs rounded font-semibold ${
+                          rec.impact === 'high' ? 'bg-red-200 text-red-800' :
+                          rec.impact === 'medium' ? 'bg-yellow-200 text-yellow-800' :
+                          'bg-blue-200 text-blue-800'
+                        }`}>
+                          {rec.impact.toUpperCase()} IMPACT
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Complexity Breakdown by Category */}
+              <div className="mt-6 bg-gray-50 rounded-lg p-6">
+                <h3 className="text-lg font-bold text-nerdio-dark mb-4">Complexity Score Breakdown</h3>
+                
+                {/* Group by category */}
+                {['Project Scope', 'Tech Stack', 'Governance', 'Security', 'Applications'].map(category => {
+                  const categoryItems = results.breakdown.filter(item => item.category === category);
+                  if (categoryItems.length === 0) return null;
+                  
+                  const categoryTotal = categoryItems.reduce((sum, item) => sum + item.score, 0);
+                  
+                  return (
+                    <div key={category} className="mb-4">
+                      <h4 className="font-semibold text-gray-700 mb-2 flex items-center justify-between">
+                        <span>{category}</span>
+                        <span className="text-sm text-gray-600">{categoryTotal} points</span>
+                      </h4>
+                      <div className="space-y-2">
+                        {categoryItems.map((item, idx) => {
+                          const Icon = item.icon;
+                          return (
+                            <div key={idx} className="flex justify-between items-center p-3 bg-white rounded-lg">
+                              <span className="flex items-center gap-2 text-gray-700">
+                                <Icon size={16} className="text-nerdio-primary-500" />
+                                <span className="text-sm">{item.name}</span>
+                              </span>
+                              <span className="text-nerdio-dark font-semibold text-sm">
+                                {item.score} pts <span className="text-gray-500">({item.value} × {item.weight})</span>
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                <div className="flex justify-between items-center p-4 bg-indigo-50 rounded-lg border-t-2 border-indigo-500 mt-4">
+                  <span className="font-bold text-indigo-900">TOTAL COMPLEXITY SCORE</span>
+                  <span className="font-bold text-indigo-900 text-xl">{results.totalScore} points</span>
+                </div>
+
+                <div className="mt-4 text-sm text-gray-600 italic">
+                  * Based on historical data from AVD migration projects
+                  <br />
+                  * Calculations assume a dedicated project delivery team
+                </div>
+              </div>
             </div>
           </div>
         )}
