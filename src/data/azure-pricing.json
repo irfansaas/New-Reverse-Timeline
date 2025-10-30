@@ -10,7 +10,7 @@
       "ram": 8,
       "monthlyCostPerVM": 87.60,
       "usersPerVM": 10,
-      "description": "Light users - Office productivity, web browsing"
+      "description": "Light users - Office productivity"
     },
     "mediumUsers": {
       "sku": "D4s_v5",
@@ -18,7 +18,7 @@
       "ram": 16,
       "monthlyCostPerVM": 175.20,
       "usersPerVM": 8,
-      "description": "Medium users - Multiple apps, moderate workloads"
+      "description": "Medium users - Multiple apps"
     },
     "heavyUsers": {
       "sku": "D8s_v5",
@@ -26,7 +26,7 @@
       "ram": 32,
       "monthlyCostPerVM": 350.40,
       "usersPerVM": 5,
-      "description": "Heavy users - CAD, video editing, intensive apps"
+      "description": "Heavy users - CAD, video editing"
     },
     "powerUsers": {
       "sku": "D16s_v5",
@@ -34,7 +34,7 @@
       "ram": 64,
       "monthlyCostPerVM": 700.80,
       "usersPerVM": 3,
-      "description": "Power users - GPU workloads, rendering, simulation"
+      "description": "Power users - GPU workloads"
     }
   },
   "storage": {
@@ -62,6 +62,30 @@
     "autoScalingSavings": {
       "withoutNerdio": 0.1,
       "withNerdio": 0.35
+    }
+  },
+  "citrixComparison": {
+    "citrixCloudLicense": {
+      "perUserPerMonth": 30,
+      "description": "Citrix Virtual Apps license"
+    },
+    "citrixStoreFront": {
+      "oneTimeSetup": 5000,
+      "description": "StoreFront setup"
+    },
+    "citrixNetScaler": {
+      "perApplianceMonth": 1500,
+      "description": "NetScaler ADC"
+    }
+  },
+  "vmwareComparison": {
+    "horizonLicense": {
+      "perUserPerMonth": 28,
+      "description": "VMware Horizon license"
+    },
+    "horizonInfrastructure": {
+      "baseInfrastructureCost": 10000,
+      "description": "Connection servers"
     }
   }
 }
