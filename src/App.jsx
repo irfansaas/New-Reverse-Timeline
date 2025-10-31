@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, Cloud, AlertTriangle, CheckCircle, Info, Download, Save, RefreshCw, Server, Shield, Package, Settings, Activity } from 'lucide-react';
-import CostCalculatorTest from "./components/CostCalculatorTest";
-import ROICalculatorTest from "./components/ROICalculatorTest";
 
 const NerdioTimelineCalculator = () => {
   const [formData, setFormData] = useState({
@@ -29,8 +27,6 @@ const NerdioTimelineCalculator = () => {
   const [results, setResults] = useState(null);
   const [showTooltip, setShowTooltip] = useState(null);
   const [savedScenarios, setSavedScenarios] = useState([]);
-  const [showCostTest, setShowCostTest] = useState(false);
-  const [showROITest, setShowROITest] = useState(false);
 
   useEffect(() => {
     const today = new Date();
@@ -497,34 +493,6 @@ const NerdioTimelineCalculator = () => {
           <p className="text-gray-600 mt-2">
             Reverse timeline calculator: Working backwards from your go-live date to determine project feasibility
           </p>
-          
-          {/* Calculator Test Buttons */}
-          <div className="mt-4 flex gap-3">
-            <button
-              onClick={() => setShowCostTest(!showCostTest)}
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold"
-            >
-              {showCostTest ? "Hide" : "Show"} Cost Calculator Test
-            </button>
-            <button
-              onClick={() => setShowROITest(!showROITest)}
-              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold"
-            >
-              {showROITest ? "Hide" : "Show"} ROI Calculator Test
-            </button>
-          </div>
-          
-          {/* Test Components */}
-          {showCostTest && (
-            <div className="mt-6">
-              <CostCalculatorTest />
-            </div>
-          )}
-          {showROITest && (
-            <div className="mt-6">
-              <ROICalculatorTest />
-            </div>
-          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
