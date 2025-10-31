@@ -1,0 +1,184 @@
+{
+  "version": "1.0",
+  "lastUpdated": "2024-10-30",
+  "description": "Nerdio Manager value metrics beyond infrastructure cost savings",
+  
+  "operationalEfficiency": {
+    "autoScaling": {
+      "description": "Automated start/stop of VMs based on usage patterns",
+      "timeSavingsHoursPerWeek": 10,
+      "costReductionPercent": 35,
+      "impactAreas": ["Reduced over-provisioning", "Eliminated idle resources", "Peak/off-peak optimization"]
+    },
+    "imageManagement": {
+      "description": "Automated golden image creation, versioning, and deployment",
+      "timeSavingsHoursPerWeek": 8,
+      "manualProcessHours": 40,
+      "impactAreas": ["Faster updates", "Consistency", "Reduced errors"]
+    },
+    "userProfileManagement": {
+      "description": "FSLogix profile optimization and management",
+      "timeSavingsHoursPerWeek": 5,
+      "issueReductionPercent": 60,
+      "impactAreas": ["Reduced profile bloat", "Faster login times", "Fewer support tickets"]
+    },
+    "monitoring": {
+      "description": "Proactive monitoring and alerting vs reactive firefighting",
+      "timeSavingsHoursPerWeek": 12,
+      "downtimeReductionPercent": 70,
+      "impactAreas": ["Proactive issue detection", "Reduced downtime", "Better user experience"]
+    }
+  },
+
+  "administrativeSavings": {
+    "reducedAdminTime": {
+      "description": "Less time managing infrastructure = more strategic work",
+      "hoursPerWeekSaved": 35,
+      "adminHourlyRate": 125,
+      "annualSavingsPerAdmin": 227500,
+      "typicalAdminCount": {
+        "small_under500": 0.5,
+        "medium_500to2000": 1,
+        "large_2000to5000": 2,
+        "enterprise_5000plus": 3
+      }
+    },
+    "reducedTier1Support": {
+      "description": "Fewer user issues due to better performance and stability",
+      "ticketReductionPercent": 40,
+      "avgTicketsPerMonth": 200,
+      "costPerTicket": 25,
+      "annualSavings": 24000
+    },
+    "fasterDeployments": {
+      "description": "Reduced time to deploy new users or applications",
+      "timeReductionPercent": 60,
+      "hoursPerDeployment": 4,
+      "deploymentsPerYear": 50,
+      "hourlyRate": 150
+    }
+  },
+
+  "businessProductivity": {
+    "fasterLoginTimes": {
+      "description": "Optimized profiles and auto-scaling = faster logins",
+      "secondsSavedPerLogin": 45,
+      "loginsPerUserPerDay": 2,
+      "workingDaysPerYear": 250,
+      "averageHourlyWage": 35,
+      "productivityGainPerUser": 18
+    },
+    "reducedDowntime": {
+      "description": "Better monitoring and auto-healing reduces unplanned outages",
+      "hoursDowntimeReduced": 20,
+      "usersImpacted": "all",
+      "costPerHourDowntime": 10000,
+      "annualSavings": 200000
+    },
+    "improvedPerformance": {
+      "description": "Right-sized VMs and auto-scaling = better user experience",
+      "performanceImprovementPercent": 25,
+      "productivityGainPercent": 5,
+      "impactedUsers": "all"
+    }
+  },
+
+  "securityCompliance": {
+    "automatedCompliance": {
+      "description": "Built-in security controls and compliance reporting",
+      "auditTimeReductionPercent": 60,
+      "hoursPerAudit": 80,
+      "auditsPerYear": 4,
+      "hourlyRate": 200,
+      "annualSavings": 38400
+    },
+    "reducedSecurityRisk": {
+      "description": "Consistent security policies across all sessions",
+      "riskReductionPercent": 50,
+      "potentialBreachCost": 500000,
+      "annualRiskReduction": 250000
+    }
+  },
+
+  "environmentalImpact": {
+    "carbonFootprint": {
+      "description": "Optimized resource usage reduces carbon emissions",
+      "co2ReductionPerVMPerYear": 0.5,
+      "carbonCreditValue": 50,
+      "calculationNote": "Based on reduced VM hours from auto-scaling"
+    },
+    "eWaste": {
+      "description": "Moving to cloud eliminates on-premise hardware refresh cycles",
+      "hardwareUnitsAvoided": 10,
+      "disposalCostPerUnit": 50,
+      "environmentalValue": "Reduced e-waste and resource consumption"
+    }
+  },
+
+  "competitiveComparison": {
+    "vsNativeAzure": {
+      "description": "Managing AVD with native Azure tools vs Nerdio",
+      "additionalAdminHours": 20,
+      "featureDifference": ["No auto-scaling", "Manual image management", "Basic monitoring", "No cost optimization"],
+      "costDifferencePercent": 35
+    },
+    "vsCitrix": {
+      "description": "Nerdio on Azure vs Citrix (cloud or on-prem)",
+      "licensingCostDifference": 30,
+      "infrastructureComplexity": "Much simpler",
+      "vendorLockIn": "Minimal vs high",
+      "totalCostDifferencePercent": 45
+    },
+    "vsVMware": {
+      "description": "Nerdio on Azure vs VMware Horizon",
+      "licensingCostDifference": 28,
+      "infrastructureComplexity": "Much simpler",
+      "cloudNative": "Yes vs hybrid complexity",
+      "totalCostDifferencePercent": 40
+    }
+  },
+
+  "implementationFactors": {
+    "typicalImplementationCost": {
+      "small_under500": {
+        "projectManagementHours": 40,
+        "architectHours": 80,
+        "engineerHours": 160,
+        "totalCost": 50000,
+        "durationWeeks": 12
+      },
+      "medium_500to2000": {
+        "projectManagementHours": 80,
+        "architectHours": 120,
+        "engineerHours": 240,
+        "totalCost": 85000,
+        "durationWeeks": 16
+      },
+      "large_2000to5000": {
+        "projectManagementHours": 120,
+        "architectHours": 160,
+        "engineerHours": 360,
+        "totalCost": 135000,
+        "durationWeeks": 20
+      },
+      "enterprise_5000plus": {
+        "projectManagementHours": 200,
+        "architectHours": 240,
+        "engineerHours": 600,
+        "totalCost": 220000,
+        "durationWeeks": 28
+      }
+    }
+  },
+
+  "calculationDefaults": {
+    "workingDaysPerYear": 250,
+    "workingHoursPerDay": 8,
+    "workingWeeksPerYear": 50,
+    "averageAdminHourlyRate": 125,
+    "averageEngineerHourlyRate": 150,
+    "averageUserHourlyWage": 35,
+    "discountRate": 0.08,
+    "inflationRate": 0.03
+  }
+}
