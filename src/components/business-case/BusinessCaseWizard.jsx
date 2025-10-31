@@ -4,16 +4,20 @@ import ProgressStepper from './ProgressStepper';
 import CustomerProfileForm from './CustomerProfile/CustomerProfileForm';
 import CurrentStateConfig from './CurrentStateConfig';
 import FutureStateConfig from './FutureStateConfig';
+import ResultsDashboard from './ResultsDashboard';
 
 export default function BusinessCaseWizard() {
   const {
     currentStep,
     customerProfile,
+    calculations,
     setProfile,
     setCurrentState,
     setFutureState,
     goToStep,
-    canProceed
+    canProceed,
+    saveScenario,
+    reset
   } = useBusinessCase();
 
   const steps = [
@@ -23,11 +27,19 @@ export default function BusinessCaseWizard() {
     { title: 'Results', subtitle: 'Business case analysis' }
   ];
 
+  const handleSave = (name) => {
+    try {
+      const scenario = saveScenario(name);
+      alert(`✓ Scenario "${scenario.name}" saved successfully!`);
+    } catch (error) {
+      alert(`Error saving scenario: ${error.message}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
           <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h1 className="text-3xl font-bold text-purple-600 mb-2">
               Nerdio Business Case Builder
@@ -37,14 +49,12 @@ export default function BusinessCaseWizard() {
             </p>
           </div>
 
-          {/* Progress Stepper */}
           <ProgressStepper 
             currentStep={currentStep} 
             steps={steps}
             onStepClick={(step) => canProceed(step) && goToStep(step)}
           />
 
-          {/* Step Content */}
           <div className="bg-gray-50">
             {currentStep === 1 && (
               <CustomerProfileForm
@@ -69,21 +79,13 @@ export default function BusinessCaseWizard() {
               />
             )}
 
-            {currentStep === 4 && (
-              <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-bold text-green-600 mb-4">
-                  🎉 Business Case Complete!
-                </h2>
-                <p className="text-gray-600">
-                  Results component will be displayed here
-                </p>
-                <button
-                  onClick={() => goToStep(1)}
-                  className="mt-4 px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700"
-                >
-                  Start New Analysis
-                </button>
-              </div>
+            {currentStep === 4 && calculations && (
+              <ResultsDashboard
+                calculations={calculations}
+                onSave={handleSave}
+                onStartNew={reset}
+                onBack={() => goToStep(3)}
+              />
             )}
           </div>
         </div>
