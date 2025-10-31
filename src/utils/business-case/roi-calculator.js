@@ -149,6 +149,7 @@ export function calculateOperationalSavings(userCount) {
     supportTicketSavings,
     totalAnnual,
     breakdown: {
+      adminHoursPerWeek: admin.reducedAdminTime.hoursPerWeekSaved * adminCount,
       adminHoursPerYear: admin.reducedAdminTime.hoursPerWeekSaved * defaults.workingWeeksPerYear * adminCount,
       automationHoursPerYear: (ops.autoScaling.timeSavingsHoursPerWeek + ops.imageManagement.timeSavingsHoursPerWeek + ops.monitoring.timeSavingsHoursPerWeek) * defaults.workingWeeksPerYear,
       supportTicketsReduced: Math.round((admin.reducedTier1Support.ticketReductionPercent / 100) * admin.reducedTier1Support.avgTicketsPerMonth * 12)
@@ -212,8 +213,8 @@ export function calculateSecurityValue(userCount) {
     (security.reducedSecurityRisk.riskReductionPercent / 100) *
     0.1; // Only count 10% of risk reduction as tangible annual value
 
-  const totalAnnual = complianceSavings + riskReductionValue;
 
+  const totalAnnual = complianceSavings + riskReductionValue;
   return {
     complianceSavings,
     riskReductionValue,

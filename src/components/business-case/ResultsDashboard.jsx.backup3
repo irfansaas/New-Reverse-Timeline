@@ -12,33 +12,10 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { formatCurrency, formatPercentage } from '../../utils/business-case/cost-calculator';
-import { generateBusinessCasePDF } from '../../utils/export/pdf-generator';
 
 export default function ResultsDashboard({ calculations, onSave, onStartNew, onBack }) {
   const [scenarioName, setScenarioName] = useState('');
   const [showSaveDialog, setShowSaveDialog] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
-
-  const handleExportPDF = async () => {
-    try {
-      setIsExporting(true);
-      console.log('Starting PDF generation...');
-      
-      const doc = generateBusinessCasePDF(calculations);
-      
-      const filename = `${customerProfile.companyName.replace(/[^a-z0-9]/gi, '_')}_Business_Case_${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      console.log('Saving PDF:', filename);
-      doc.save(filename);
-      
-      console.log('PDF generated successfully!');
-      setIsExporting(false);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Error generating PDF: ' + error.message);
-      setIsExporting(false);
-    }
-  };
 
   const {
     customerProfile,
@@ -86,16 +63,11 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
               Save Scenario
             </button>
             <button
-              onClick={handleExportPDF}
-              disabled={isExporting}
-              className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 ${
-                isExporting
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              } text-white`}
+              onClick={() => alert('Export feature coming soon!')}
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
             >
               <Download size={20} />
-              {isExporting ? 'Generating...' : 'Export PDF'}
+              Export PDF
             </button>
           </div>
         </div>
