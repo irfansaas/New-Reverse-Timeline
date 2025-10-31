@@ -187,7 +187,7 @@ export function calculateCurrentStateCost(params) {
       throw new Error(`Invalid platform: ${platform}`);
   }
 
-  if (customCosts.monthlyCost) {
+  if (customCosts && customCosts.monthlyCost) {
     monthlyCost = customCosts.monthlyCost;
   }
 

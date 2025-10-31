@@ -5,31 +5,31 @@ import { Building2, Users, MapPin, Calendar, Server, Shield } from 'lucide-react
  * Customer Profile Form Component
  * Collects essential customer information for business case analysis
  */
-export default function CustomerProfileForm({ onComplete, initialData = {} }) {
+export default function CustomerProfileForm({ onComplete, initialData }) {
   const [formData, setFormData] = useState({
     // Company Information
-    companyName: initialData.companyName || '',
-    industry: initialData.industry || '',
-    companySize: initialData.companySize || 'medium',
+    companyName: initialData?.companyName || '',
+    industry: initialData?.industry || '',
+    companySize: initialData?.companySize || 'medium',
     
     // User Information
-    totalUsers: initialData.totalUsers || 1000,
-    userProfile: initialData.userProfile || 'medium',
-    locations: initialData.locations || [''],
+    totalUsers: initialData?.totalUsers || 1000,
+    userProfile: initialData?.userProfile || 'medium',
+    locations: initialData?.locations || [''],
     
     // Current Environment
-    currentPlatform: initialData.currentPlatform || 'citrix',
-    currentServerCount: initialData.currentServerCount || 10,
-    onPremiseDataCenter: initialData.onPremiseDataCenter || false,
+    currentPlatform: initialData?.currentPlatform || 'citrix',
+    currentServerCount: initialData?.currentServerCount || 10,
+    onPremiseDataCenter: initialData?.onPremiseDataCenter || false,
     
     // Timeline
-    targetGoLiveDate: initialData.targetGoLiveDate || '',
-    compellingEvent: initialData.compellingEvent || '',
+    targetGoLiveDate: initialData?.targetGoLiveDate || '',
+    compellingEvent: initialData?.compellingEvent || '',
     
     // Decision Makers
-    primaryContact: initialData.primaryContact || '',
-    technicalContact: initialData.technicalContact || '',
-    financialContact: initialData.financialContact || ''
+    primaryContact: initialData?.primaryContact || '',
+    technicalContact: initialData?.technicalContact || '',
+    financialContact: initialData?.financialContact || ''
   });
 
   const [errors, setErrors] = useState({});
@@ -71,7 +71,6 @@ export default function CustomerProfileForm({ onComplete, initialData = {} }) {
 
   const handleInputChange = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    // Clear error for this field
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: null }));
     }
@@ -124,7 +123,6 @@ export default function CustomerProfileForm({ onComplete, initialData = {} }) {
     e.preventDefault();
     
     if (validate()) {
-      // Clean up locations (remove empty entries)
       const cleanedData = {
         ...formData,
         locations: formData.locations.filter(loc => loc.trim())
