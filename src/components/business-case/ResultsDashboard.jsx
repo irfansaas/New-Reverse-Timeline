@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { 
   TrendingUp, 
+import { exportBusinessCaseToExcel } from '../../utils/export/excel-generator';
   DollarSign, 
   Users, 
   Clock, 
@@ -35,6 +36,16 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
       setIsExporting(false);
     } catch (error) {
       console.error('Error generating PDF:', error);
+
+  const handleExportExcel = () => {
+    try {
+      exportBusinessCaseToExcel(calculations);
+      alert("Excel file downloaded successfully!");
+    } catch (error) {
+      console.error("Error generating Excel:", error);
+      alert("Error generating Excel file. Please try again.");
+    }
+  };
       alert('Error generating PDF: ' + error.message);
       setIsExporting(false);
     }
