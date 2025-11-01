@@ -385,7 +385,7 @@ setResults({
             <span className={`w-2 h-2 rounded-full ${
               results.delta >= 0 ? 'bg-green-500' : 'bg-red-500'
             }`}></span>
-            <span>{results.delta >= 0 ? 'On track' : `${Math.abs(results.delta)} weeks over`}</span>
+            <span>{results.delta >= 0 ? 'On track' : `${Math.abs(results.delta).toFixed(1)} weeks over`}</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-green-600 font-semibold">⚡ {overlapAnalysis.totalTimeSaved}w saved</span>
@@ -964,7 +964,7 @@ setResults({
                     results.delta >= -4 ? 'text-yellow-900' :
                     'text-red-900'
                   }`}>
-                    {results.delta > 0 ? '+' : ''}{results.delta}
+                    {results.delta > 0 ? '+' : ''}{results.delta.toFixed(1)}
                   </div>
                   <div className={`mt-2 ${
                     results.delta >= 0 ? 'text-green-700' :
@@ -985,9 +985,9 @@ setResults({
                    'TIMELINE IS NOT FEASIBLE'}
                 </div>
                 <p className="mt-2">
-                  {results.delta >= 0 ? `You have ${results.delta} weeks of buffer for unexpected issues` :
-                   results.delta >= -4 ? `Only ${Math.abs(results.delta)} weeks short - requires immediate action` :
-                   `${Math.abs(results.delta)} weeks short - project cannot proceed as scoped`}
+                  {results.delta >= 0 ? `You have ${results.delta.toFixed(1)} weeks of buffer for unexpected issues` :
+                   results.delta >= -4 ? `Only ${Math.abs(results.delta).toFixed(1)} weeks short - requires immediate action` :
+                   `${Math.abs(results.delta).toFixed(1)} weeks short - project cannot proceed as scoped`}
                 </p>
               </div>
 
