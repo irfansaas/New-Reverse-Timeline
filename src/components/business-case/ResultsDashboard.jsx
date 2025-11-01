@@ -461,7 +461,5 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
         </button>
       </div>
     </div>
-    </div>
-    </div>
   );
 }
