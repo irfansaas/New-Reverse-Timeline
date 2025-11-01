@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import { exportBusinessCaseToExcel } from '../../utils/export/excel-generator';
 import { 
   TrendingUp, 
-import { exportBusinessCaseToExcel } from '../../utils/export/excel-generator';
   DollarSign, 
   Users, 
   Clock, 
   Award,
   Leaf,
-  Download,
+  Download, FileSpreadsheet,
   Save,
   ArrowLeft,
   CheckCircle
@@ -107,6 +107,13 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
             >
               <Download size={20} />
               {isExporting ? 'Generating...' : 'Export PDF'}
+            </button>
+            <button
+              onClick={handleExportExcel}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+            >
+              <FileSpreadsheet size={20} />
+              Export Excel
             </button>
           </div>
         </div>
