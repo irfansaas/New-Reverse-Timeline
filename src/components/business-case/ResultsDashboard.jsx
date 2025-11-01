@@ -118,6 +118,8 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
               <FileSpreadsheet size={20} />
               Export Excel
             </button>
+          </div>
+        </div>
 
         {/* Save Dialog */}
         {showSaveDialog && (
