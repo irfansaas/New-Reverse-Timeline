@@ -187,7 +187,7 @@ setResults({
     if (delta < 0) {
       recs.push({
         type: 'critical',
-        text: `Timeline is ${Math.abs(delta)} weeks short. This project cannot proceed as scoped.`,
+        text: `Timeline is ${Math.abs(delta).toFixed(1).toFixed(1)} weeks short. This project cannot proceed as scoped.`,
         priority: 1
       });
 
@@ -221,7 +221,7 @@ setResults({
 
       recs.push({
         type: 'action',
-        text: `Extend go-live date by ${Math.abs(delta) + 4} weeks to include buffer`,
+        text: `Extend go-live date by ${Math.abs(delta + 4).toFixed(1)} weeks to include buffer`,
         impact: 'high',
         priority: 5
       });
