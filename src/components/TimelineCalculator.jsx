@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, Cloud, AlertTriangle, CheckCircle, Info, Download, Save, RefreshCw, Server, Shield, Package, Settings, Activity } from 'lucide-react';
 import { calculatePhaseOverlaps, getTimelineComparison } from '../utils/timeline/phaseOverlap';  // ← ADD THIS LINE
+import TestDataButton from './TestDataButton';
 
 const NerdioTimelineCalculator = () => {
   const [formData, setFormData] = useState({
@@ -1074,6 +1075,16 @@ setResults({
           </div>
         )}
       </div>
+	  return (
+  <div className="min-h-screen bg-gradient-to-br from-nerdio-primary-50 via-white to-nerdio-primary-50 p-4">
+    <div className="max-w-7xl mx-auto">
+      {/* ... all your existing content ... */}
+      
+      {/* ADD THIS BEFORE THE LAST </div> */}
+      <TestDataButton onInject={(data) => setFormData(data)} />
+    </div>
+  </div>
+);
     </div>
   );
 };
