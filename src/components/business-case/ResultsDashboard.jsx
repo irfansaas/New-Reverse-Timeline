@@ -42,13 +42,15 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
     }
   };
 
+      console.log("Full calculations:", JSON.stringify(calculations, null, 2));
   const handleExportExcel = () => {
+      console.log("Calculations object:", calculations);      console.log("ROI Analysis:", calculations.roiAnalysis);
     try {
       exportBusinessCaseToExcel(calculations);
       alert("Excel file downloaded successfully!");
     } catch (error) {
       console.error("Error generating Excel:", error);
-      alert("Error generating Excel file. Please try again.");
+      alert("Error generating Excel: " + error.message);
     }
   };
 
