@@ -187,7 +187,7 @@ setResults({
     if (delta < 0) {
       recs.push({
         type: 'critical',
-        text: `Timeline is ${Math.abs(delta).toFixed(1).toFixed(1)} weeks short. This project cannot proceed as scoped.`,
+        text: `Timeline is ${Math.abs(delta).toFixed(1)} weeks short. This project cannot proceed as scoped.`,
         priority: 1
       });
 
