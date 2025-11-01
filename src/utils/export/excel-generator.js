@@ -84,6 +84,10 @@ function createExecutiveSummarySheet(calculations) {
  */
 function createCurrentStateSheet(calculations) {
   const { currentState, customerProfile } = calculations;
+
+  if (!currentState || !currentState.costs) {
+    return XLSX.utils.aoa_to_sheet([["Current State data not available"]]);
+  }
   
   const data = [
     ['CURRENT STATE COST ANALYSIS'],
@@ -110,6 +114,10 @@ function createCurrentStateSheet(calculations) {
  */
 function createFutureStateSheet(calculations) {
   const { futureState, customerProfile } = calculations;
+
+  if (!futureState || !futureState.costs) {
+    return XLSX.utils.aoa_to_sheet([["Future State data not available"]]);
+  }
   
   const data = [
     ['FUTURE STATE COST ANALYSIS'],
