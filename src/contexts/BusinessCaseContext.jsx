@@ -101,6 +101,7 @@ export function BusinessCaseProvider({ children }) {
         implementationCost: implCost,
         calculatedAt: new Date().toISOString()
       };
+      console.log("Results object created:", JSON.stringify(results, null, 2));
 
       setCalculations(results);
       setCurrentStep(4);
