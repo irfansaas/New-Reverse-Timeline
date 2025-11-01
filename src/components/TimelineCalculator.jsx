@@ -1069,24 +1069,17 @@ setResults({
                   * Based on historical data from AVD migration projects
                   <br />
                   * Calculations assume a dedicated project delivery team
-                </div>
-              </div>
+            </div>
             </div>
           </div>
         )}
       </div>
-	  return (
-  <div className="min-h-screen bg-gradient-to-br from-nerdio-primary-50 via-white to-nerdio-primary-50 p-4">
-    <div className="max-w-7xl mx-auto">
-      {/* ... all your existing content ... */}
       
-      {/* ADD THIS BEFORE THE LAST </div> */}
+      {/* Test Data Buttons */}
       <TestDataButton onInject={(data) => setFormData(data)} />
-    </div>
-  </div>
-);
     </div>
   );
 };
 
+export default NerdioTimelineCalculator;   
 export default NerdioTimelineCalculator;
