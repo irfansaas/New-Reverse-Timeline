@@ -1082,4 +1082,3 @@ setResults({
 };
 
 export default NerdioTimelineCalculator;   
-export default NerdioTimelineCalculator;
