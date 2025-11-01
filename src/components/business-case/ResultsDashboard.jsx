@@ -42,6 +42,16 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
     }
   };
 
+  const handleExportExcel = () => {
+    try {
+      exportBusinessCaseToExcel(calculations);
+      alert("Excel file downloaded successfully!");
+    } catch (error) {
+      console.error("Error generating Excel:", error);
+      alert("Error generating Excel file. Please try again.");
+    }
+  };
+
   const {
     customerProfile,
     currentState,
@@ -100,9 +110,12 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
               {isExporting ? 'Generating...' : 'Export PDF'}
             </button>
             <button
+              onClick={handleExportExcel}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+            >
+              <FileSpreadsheet size={20} />
+              Export Excel
             </button>
-          </div>
-        </div>
 
         {/* Save Dialog */}
         {showSaveDialog && (
@@ -443,6 +456,8 @@ export default function ResultsDashboard({ calculations, onSave, onStartNew, onB
           Create New Analysis
         </button>
       </div>
+    </div>
+    </div>
     </div>
   );
 }
