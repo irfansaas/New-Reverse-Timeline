@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Users, Cloud, AlertTriangle, CheckCircle, Info, Download, Save, RefreshCw, Server, Shield, Package, Settings, Activity } from 'lucide-react';
+import { calculatePhaseOverlaps, getTimelineComparison } from '../utils/timeline/phaseOverlap';  // ← ADD THIS LINE
 
 const NerdioTimelineCalculator = () => {
   const [formData, setFormData] = useState({
@@ -140,24 +141,43 @@ const NerdioTimelineCalculator = () => {
     const delta = weeksAvailable - weeksRequired;
     
     // Define phases
-    const phases = [
-      { name: 'Prepare & Transform Applications', weeks: Math.min(9, Math.ceil(weeksRequired * 0.3)) },
-      { name: 'Prepare Azure Environment', weeks: 3 },
-      { name: 'Deploy Nerdio', weeks: 3 },
-      { name: 'Design, Build & Configure AVD', weeks: 8 },
-      { name: 'Pilot Group Testing', weeks: 4 },
-      { name: 'User & Use Case Migration', weeks: 3 }
-    ];
+// Define phases (sequential/waterfall approach)
+const sequentialPhases = [
+  { name: 'Prepare & Transform Applications', weeks: Math.min(9, Math.ceil(weeksRequired * 0.3)) },
+  { name: 'Prepare Azure Environment', weeks: 3 },
+  { name: 'Deploy Nerdio', weeks: 3 },
+  { name: 'Design, Build & Configure AVD', weeks: 8 },
+  { name: 'Pilot Group Testing', weeks: 4 },
+  { name: 'User & Use Case Migration', weeks: 3 }
+];
 
-    setResults({
-      weeksAvailable,
-      weeksRequired,
-      delta,
-      totalScore,
-      breakdown: breakdown.sort((a, b) => b.score - a.score),
-      recommendations: generateRecommendations(delta, breakdown, formData, totalScore),
-      phases
-    });
+// Calculate phase overlaps (parallel/agile approach)
+const overlapResult = calculatePhaseOverlaps(sequentialPhases);
+
+// Adjusted weeks required with overlaps
+const weeksRequiredWithOverlap = overlapResult.totalWeeksWithOverlap;
+const deltaWithOverlap = weeksAvailable - weeksRequiredWithOverlap;
+
+// Timeline comparison
+const timelineComparison = getTimelineComparison(
+  weeksRequired,
+  weeksRequiredWithOverlap
+);
+
+setResults({
+  weeksAvailable,
+  weeksRequired: weeksRequiredWithOverlap, // Use overlap-adjusted weeks
+  weeksRequiredSequential: weeksRequired,   // Keep original for comparison
+  delta: deltaWithOverlap,                  // Use overlap-adjusted delta
+  deltaSequential: delta,                   // Keep original delta
+  totalScore,
+  breakdown: breakdown.sort((a, b) => b.score - a.score),
+  recommendations: generateRecommendations(deltaWithOverlap, breakdown, formData, totalScore),
+  phases: overlapResult.adjustedPhases,     // Use overlap-adjusted phases
+  phasesSequential: sequentialPhases,       // Keep original for comparison
+  overlapAnalysis: overlapResult,           // Full overlap data
+  timelineComparison                        // Comparison metrics
+});
   };
 
   const generateRecommendations = (delta, breakdown, data, totalScore) => {
@@ -328,159 +348,172 @@ const NerdioTimelineCalculator = () => {
   };
 
   const renderGanttTimeline = () => {
-    if (!results) return null;
+  if (!results) return null;
 
-    const { weeksAvailable, weeksRequired, phases } = results;
-    
-    // Calculate when each phase should occur (working backwards)
-    let currentWeekFromEnd = weeksRequired;
-    const phaseTimings = phases.map(phase => {
-      const endWeek = currentWeekFromEnd;
-      const startWeek = currentWeekFromEnd - phase.weeks;
-      currentWeekFromEnd = startWeek;
-      return {
-        ...phase,
-        startWeek,
-        endWeek,
-        startPercent: (startWeek / weeksRequired) * 100,
-        widthPercent: (phase.weeks / weeksRequired) * 100
-      };
-    }).reverse();
+  const { weeksAvailable, weeksRequired, phases, overlapAnalysis } = results;
+  
+  // Calculate percentages for visualization
+  const maxWeeks = Math.max(weeksAvailable, weeksRequired);
+  const phasesWithPercent = phases.map(phase => ({
+    ...phase,
+    startPercent: (phase.startWeek / maxWeeks) * 100,
+    widthPercent: (phase.weeks / maxWeeks) * 100
+  }));
 
-    // Phase colors (solid for this design)
-    const phaseColors = [
-      'bg-nerdio-primary-500',
-      'bg-indigo-500', 
-      'bg-nerdio-secondary-500',
-      'bg-pink-500',
-      'bg-rose-500',
-      'bg-orange-500'
-    ];
+  // Phase colors
+  const phaseColors = [
+    'bg-nerdio-primary-500',
+    'bg-indigo-500', 
+    'bg-nerdio-secondary-500',
+    'bg-pink-500',
+    'bg-rose-500',
+    'bg-orange-500'
+  ];
 
-    // Calculate key milestones
-    const milestones = [
-      { name: 'Go/No-Go Decision', week: Math.floor(weeksRequired * 0.3), color: 'bg-yellow-400' },
-      { name: 'Pilot Launch', week: Math.floor(weeksRequired * 0.7), color: 'bg-nerdio-primary-500' },
-      { name: 'Production Cutover', week: weeksRequired, color: 'bg-green-500' }
-    ];
-
-    return (
-      <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
-        {/* Header */}
-        <div className="mb-6">
-          <h3 className="text-xl font-bold text-nerdio-dark mb-2">Project Timeline</h3>
-          <div className="flex items-center gap-6 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <Calendar size={16} />
-              <span>{weeksRequired} weeks total duration</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full ${
-                results.delta >= 0 ? 'bg-green-500' : 'bg-red-500'
-              }`}></span>
-              <span>{results.delta >= 0 ? 'On track' : `${Math.abs(results.delta)} weeks over`}</span>
-            </div>
+  return (
+    <div className="bg-white rounded-xl p-8 shadow-sm border border-gray-200">
+      {/* Header */}
+      <div className="mb-6">
+        <h3 className="text-xl font-bold text-nerdio-dark mb-2">Project Timeline (Parallel Execution)</h3>
+        <div className="flex items-center gap-6 text-sm text-gray-600">
+          <div className="flex items-center gap-2">
+            <Calendar size={16} />
+            <span>{weeksRequired} weeks total duration</span>
           </div>
-        </div>
-
-        {/* Column Headers */}
-        <div className="grid grid-cols-12 gap-4 mb-4 px-6 text-sm font-semibold text-gray-500">
-          <div className="col-span-3">Phase</div>
-          <div className="col-span-6">Timeline</div>
-          <div className="col-span-2 text-center">Progress</div>
-          <div className="col-span-1 text-center">Status</div>
-        </div>
-
-        {/* Phase Rows */}
-        <div className="space-y-3">
-          {phaseTimings.map((phase, idx) => {
-            const isOverflow = phase.endWeek > weeksAvailable;
-            
-            return (
-              <div 
-                key={idx}
-                className="grid grid-cols-12 gap-4 items-center bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
-              >
-                {/* Phase Name & Duration */}
-                <div className="col-span-3">
-                  <div className="font-semibold text-nerdio-dark text-sm">{phase.name}</div>
-                  <div className="text-xs text-gray-500 mt-1">{phase.weeks} weeks</div>
-                </div>
-
-                {/* Timeline Bar */}
-                <div className="col-span-6 relative h-8 bg-gray-200 rounded-full overflow-hidden">
-                  <div 
-                    className={`absolute h-full ${isOverflow ? 'bg-red-500' : phaseColors[idx]} rounded-full transition-all`}
-                    style={{
-                      left: `${phase.startPercent}%`,
-                      width: `${phase.widthPercent}%`
-                    }}
-                  ></div>
-                  {/* Timeline scale markers */}
-                  <div className="absolute inset-0 flex items-center">
-                    {[0, 25, 50, 75, 100].map(mark => (
-                      <div 
-                        key={mark}
-                        className="absolute h-full w-px bg-gray-300"
-                        style={{ left: `${mark}%` }}
-                      ></div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Progress */}
-                <div className="col-span-2 text-center">
-                  <span className="text-lg font-semibold text-nerdio-dark">0%</span>
-                </div>
-
-                {/* Status Icon */}
-                <div className="col-span-1 flex justify-center">
-                  {isOverflow ? (
-                    <AlertTriangle className="text-red-500" size={20} />
-                  ) : (
-                    <Info className="text-gray-400" size={20} />
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Key Milestones */}
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center">
-              <span className="text-white text-xs">⚑</span>
-            </div>
-            <h4 className="font-semibold text-nerdio-dark">Key Milestones</h4>
+          <div className="flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full ${
+              results.delta >= 0 ? 'bg-green-500' : 'bg-red-500'
+            }`}></span>
+            <span>{results.delta >= 0 ? 'On track' : `${Math.abs(results.delta)} weeks over`}</span>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {milestones.map((milestone, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <div className={`w-3 h-3 rounded-full ${milestone.color}`}></div>
-                <div>
-                  <div className="text-sm font-medium text-nerdio-dark">{milestone.name}</div>
-                  <div className="text-xs text-gray-500">Week {milestone.week}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Timeline scale */}
-        <div className="mt-6 px-6">
-          <div className="relative h-8 flex items-center justify-between text-xs text-gray-500">
-            <span>Start</span>
-            <span>25%</span>
-            <span>50%</span>
-            <span>75%</span>
-            <span>Go-Live</span>
+          <div className="flex items-center gap-2">
+            <span className="text-green-600 font-semibold">⚡ {overlapAnalysis.totalTimeSaved}w saved</span>
+            <span className="text-xs text-gray-500">(vs sequential)</span>
           </div>
         </div>
       </div>
-    );
-  };
+
+      {/* Column Headers */}
+      <div className="grid grid-cols-12 gap-4 mb-4 px-6 text-sm font-semibold text-gray-500">
+        <div className="col-span-3">Phase</div>
+        <div className="col-span-6">Timeline</div>
+        <div className="col-span-2 text-center">Duration</div>
+        <div className="col-span-1 text-center">Status</div>
+      </div>
+
+      {/* Phase Rows */}
+      <div className="space-y-3">
+        {phasesWithPercent.map((phase, idx) => {
+          const isOverflow = phase.endWeek > weeksAvailable;
+          
+          return (
+            <div 
+              key={idx}
+              className="grid grid-cols-12 gap-4 items-center bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+            >
+              {/* Phase Name & Duration */}
+              <div className="col-span-3">
+                <div className="font-semibold text-nerdio-dark text-sm">{phase.name}</div>
+                <div className="text-xs text-gray-500 mt-1">
+                  {phase.weeks} weeks
+                  {phase.overlapsWithPrevious && (
+                    <span className="ml-2 text-green-600 font-semibold">
+                      ⚡ -{phase.overlapWeeks.toFixed(1)}w overlap
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Timeline Bar */}
+              <div className="col-span-6 relative h-8 bg-gray-200 rounded-full overflow-visible">
+                {/* Timeline scale markers */}
+                <div className="absolute inset-0 flex items-center">
+                  {[0, 25, 50, 75, 100].map(mark => (
+                    <div 
+                      key={mark}
+                      className="absolute h-full w-px bg-gray-300"
+                      style={{ left: `${mark}%` }}
+                    ></div>
+                  ))}
+                </div>
+                
+                {/* Phase bar */}
+                <div 
+                  className={`absolute h-full ${isOverflow ? 'bg-red-500' : phaseColors[idx]} rounded-full transition-all ${
+                    phase.overlapsWithPrevious ? 'opacity-90' : ''
+                  }`}
+                  style={{
+                    left: `${phase.startPercent}%`,
+                    width: `${phase.widthPercent}%`
+                  }}
+                  title={phase.overlapDescription || phase.name}
+                >
+                  {/* Overlap indicator */}
+                  {phase.overlapsWithPrevious && (
+                    <div className="absolute -left-1 top-0 h-full w-2 bg-green-400 rounded-l-full">
+                      <div className="absolute -left-1 top-1/2 transform -translate-y-1/2">
+                        <span className="text-xs text-green-600">⚡</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Duration */}
+              <div className="col-span-2 text-center">
+                <span className="text-lg font-semibold text-nerdio-dark">
+                  W{Math.round(phase.startWeek)}-{Math.round(phase.endWeek)}
+                </span>
+              </div>
+
+              {/* Status Icon */}
+              <div className="col-span-1 flex justify-center">
+                {isOverflow ? (
+                  <AlertTriangle className="text-red-500" size={20} />
+                ) : phase.overlapsWithPrevious ? (
+                  <CheckCircle className="text-green-500" size={20} />
+                ) : (
+                  <Info className="text-gray-400" size={20} />
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Overlap Details */}
+      {overlapAnalysis.totalTimeSaved > 0 && (
+        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <h4 className="font-semibold text-green-900 mb-2 flex items-center gap-2">
+            <CheckCircle size={16} />
+            Phase Overlap Benefits
+          </h4>
+          <div className="text-sm text-gray-700 space-y-1">
+            {overlapAnalysis.adjustedPhases
+              .filter(p => p.overlapsWithPrevious)
+              .map((phase, idx) => (
+                <div key={idx} className="flex items-start gap-2">
+                  <span className="text-green-600 mt-0.5">⚡</span>
+                  <span>{phase.overlapDescription}</span>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
+
+      {/* Timeline scale */}
+      <div className="mt-6 px-6">
+        <div className="relative h-8 flex items-center justify-between text-xs text-gray-500">
+          <span>Start</span>
+          <span>25%</span>
+          <span>50%</span>
+          <span>75%</span>
+          <span>Go-Live (Week {Math.round(weeksRequired)})</span>
+        </div>
+      </div>
+    </div>
+  );
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-nerdio-primary-50 via-white to-nerdio-primary-50 p-4">
