@@ -1065,7 +1065,7 @@ setResults({
                   <span className="font-bold text-indigo-900 text-xl">{results.totalScore} points</span>
                 </div>
 
-             <div className="mt-4 text-sm text-gray-600 italic">
+                  <div className="mt-4 text-sm text-gray-600 italic">
                   * Based on historical data from AVD migration projects
                   <br />
                   * Calculations assume a dedicated project delivery team
